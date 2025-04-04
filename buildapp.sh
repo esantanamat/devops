@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "Enter your name"
 read name
 MY_ARG_VALUE=${name}
 echo ${MY_ARG_VALUE}
