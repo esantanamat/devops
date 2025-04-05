@@ -1,0 +1,41 @@
+services:
+  web:
+    build: .
+    container_name: flask_app
+    ports:
+      - "5000:5000"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - FLASK_APP=app.main
+      - FLASK_RUN_HOST=0.0.0.0
+    depends_on:
+      - db
+
+    networks:
+      - todo_network
+
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+    ports:
+      - "5432:5432"
+    volumes:
+      - todo_data:/var/lib/postgresql/data
+    networks:
+      - todo_network
+
+networks:
+  todo_network:
+    driver: bridge
+
+volumes:
+  todo_data:
+    driver: local

@@ -1,8 +1,8 @@
 import random
 import string
 
-from db import db
-from models import Todo
+from app.db import db
+from app.models import Todo
 
 def fetch_all_todos():
     fetched_todos = db.session.query(Todo).all()

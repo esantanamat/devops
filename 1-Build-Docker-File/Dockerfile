@@ -1,5 +1,5 @@
 FROM node:20-alpine
 
-WORKDIR /app
+WORKDIR .
 ARG MY_VARIABLE
 RUN echo "Hello ${MY_VARIABLE}"

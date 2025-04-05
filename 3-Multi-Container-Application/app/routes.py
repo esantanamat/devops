@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, request, jsonify
-from db import db
-from functions import fetch_all_todos, fetch_single_todo 
-from models import Todo
+from app.db import db
+from app.functions import fetch_all_todos, fetch_single_todo 
+from app.models import Todo
 routes = Blueprint("routes", __name__)
 
 @routes.route('/todos', methods=['GET', 'POST'])
