@@ -16,7 +16,6 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . /app
 
 
-COPY .env /app/.env
 
 ENV PYTHONPATH=/app
 ENV FLASK_APP=app
