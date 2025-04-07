@@ -1,0 +1,40 @@
+
+- name: Provision
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Install docker
+      apt:
+       name: docker.io
+       state: present
+       update_cache: yes
+    - name: Install Docker-compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/v2.24.1/docker-compose-linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+    - name: Clone github repo
+      git:
+        repo: https://github.com/esantanamat/devops.git
+        dest: /usr/local/devops
+        clone: yes
+        update: yes
+    - name: Remove unrelated directory
+      file:
+        path: "/usr/local/devops/1-Build-Docker-File"
+        state: absent
+    - name: Remove another unrelated directory
+      file:
+        path: "/usr/local/devops/2-EC2-Instance"
+        state: absent
+    - name: Launch containers on Ec2 instance
+      docker_container:
+        name: flask_app
+        image: esantana/flask-app:latest
+        state: started
+        restart_policy: always
+        expose_ports:
+          - "80"
+          - "443"
+        published_ports:
+          - "8080:80"
