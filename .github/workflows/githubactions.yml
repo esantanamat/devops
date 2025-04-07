@@ -46,7 +46,7 @@ jobs:
             username: ${{ secrets.EC2_USERNAME }}
             key: ${{ secrets.EC2_SSH_KEY }}
             source: "./3-Multi-Container-Application/app/.env"
-            target: "~/"
+            target: "~/3-Multi-Container-Application/"
 
       - name: Copy provision.yml to EC2
         uses: appleboy/scp-action@v0.1.0
@@ -55,7 +55,8 @@ jobs:
             username: ${{ secrets.EC2_USERNAME }}
             key: ${{ secrets.EC2_SSH_KEY }}
             source: "./3-Multi-Container-Application/infrastructure/provision.yml"
-            target: "/home/ubuntu/3-Multi-Container-Application/infrastructure/"
+            target: "~/3-Multi-Container-Application/"
+
 
       - name: Deploy docker container with ansible
         uses: appleboy/ssh-action@v0.1.0
