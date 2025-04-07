@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: /3-Multi-Container-Application
+        working-directory: ./3-Multi-Container-Application
 
     steps:
       - name: Checkout code
