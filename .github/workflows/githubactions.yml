@@ -55,13 +55,14 @@ jobs:
             username: ${{ secrets.EC2_USERNAME }}
             key: ${{ secrets.EC2_SSH_KEY }}
             source: "./3-Multi-Container-Application/infrastructure/provision.yml"
-            target: "/home/${{ secrets.EC2_USERNAME }}/devops/3-Multi-Container-Application/infrastructure/provision.yml"
+            target: "/home/ubuntu/3-Multi-Container-Application/infrastructure/provision.yml"
 
       - name: Deploy docker container with ansible
         uses: appleboy/ssh-action@v0.1.0
         with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ${{ secrets.EC2_USERNAME }}
-            key: ${{ secrets.EC2_SSH_KEY }}
-            script: |
-              ansible-playbook /home/${{ secrets.EC2_USERNAME }}/devops/3-Multi-Container-Application/infrastructure/provision.yml -i /home/${{ secrets.EC2_USERNAME }}/devops/3-Multi-Container-Application/infrastructure/inventory/hosts
+                host: ${{ secrets.EC2_HOST }}
+                username: ${{ secrets.EC2_USERNAME }}
+                key: ${{ secrets.EC2_SSH_KEY }}
+                script: |
+                  ansible-playbook /home/ubuntu/3-Multi-Container-Application/infrastructure/provision.yml -i /home/ubuntu/3-Multi-Container-Application/infrastructure/inventory/hosts
+          
