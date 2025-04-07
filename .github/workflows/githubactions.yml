@@ -57,10 +57,6 @@ jobs:
             source: "./3-Multi-Container-Application/infrastructure/provision.yml"
             target: "/home/${{ secrets.EC2_USERNAME }}/devops/3-Multi-Container-Application/infrastructure/provision.yml"
 
-      - name: Verify provision.yml exists and check permissions
-        run: |
-          ls -l /home/ubuntu/devops/3-Multi-Container-Application/infrastructure/provision.yml
-
       - name: Deploy docker container with ansible
         uses: appleboy/ssh-action@v0.1.0
         with:
