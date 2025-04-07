@@ -79,8 +79,9 @@ jobs:
       - name: Run Ansible playbook on EC2
         uses: appleboy/ssh-action@v0.1.0
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            ansible-playbook ~/3-Multi-Container-Application/infrastructure/provision.yml -i ~/3-Multi-Container-Application/infrastructure/inventory.ini
+            host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USERNAME }}
+            key: ${{ secrets.EC2_SSH_KEY }}
+            script: |
+              export ANSIBLE_HOST_KEY_CHECKING=False
+              ansible-playbook ~/3-Multi-Container-Application/infrastructure/provision.yml -i ~/3-Multi-Container-Application/infrastructure/inventory.ini
