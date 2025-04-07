@@ -64,5 +64,5 @@ jobs:
                 username: ${{ secrets.EC2_USERNAME }}
                 key: ${{ secrets.EC2_SSH_KEY }}
                 script: |
-                  ansible-playbook /home/ubuntu/3-Multi-Container-Application/infrastructure/provision.yml -i /home/ubuntu/3-Multi-Container-Application/infrastructure/inventory/hosts
+                  ansible-playbook /home/buntu/3-Multi-Container-Application/infrastructure/provision.yml -i /home/ubuntu/3-Multi-Container-Application/infrastructure/inventory/hosts
           
