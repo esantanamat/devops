@@ -39,9 +39,9 @@ jobs:
           echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> app/.env
           echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> app/.env
 
-          - name: Copy .env file to EC2
-          uses: appleboy/scp-action@v0.1.0
-          with:
+      - name: Copy .env file to EC2
+        uses: appleboy/scp-action@v0.1.0
+        with:
               host: ${{ secrets.EC2_HOST }}
               username: ${{ secrets.EC2_USERNAME }}
               key: ${{ secrets.EC2_SSH_KEY }}
