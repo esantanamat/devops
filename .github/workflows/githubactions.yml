@@ -29,20 +29,20 @@ jobs:
         run: docker push esantanamat/flask-app:latest
       - name: Generate .env file from secrets
         run: |
-          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-          echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> .env
-          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
-          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> app/.env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> app/.env
+          echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> app/.env
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> app/.env
+          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> app/.env
       - name: Copy .env file to EC2
         uses: appleboy/scp-action@v0.1.0
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: ".env"
-          target: "~/"
-          
+            host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USERNAME }}
+            key: ${{ secrets.EC2_SSH_KEY }}
+            source: "./3-Multi-Container-Application/app/.env"
+            target: "~/"
+
       -  name: Deploy docker container with ansible
          uses: appleboy/ssh-action@v0.1.0
          with:
