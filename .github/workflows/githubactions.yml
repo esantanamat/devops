@@ -27,6 +27,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push docker image
         run: docker push esantanamat/flask-app:latest
+      - name: Generate .env file from secrets
+        run: |
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> .env
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
+          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env
       - name: Copy .env file to EC2
         uses: appleboy/scp-action@v0.1.0
         with:
@@ -35,6 +42,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: ".env"
           target: "~/"
+          
       -  name: Deploy docker container with ansible
          uses: appleboy/ssh-action@v0.1.0
          with:
