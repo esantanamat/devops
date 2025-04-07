@@ -59,6 +59,16 @@ jobs:
           target: "~/3-Multi-Container-Application/infrastructure/"
           strip_components: 3
 
+      - name: Copy the inventory file
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.EC2_HOST}}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./3-Multi-Container-Application/infrastructure/inventory.ini"
+          target: "~/3-Multi-Container-Application/infrastructure/"
+          strip_components: 3
+
       - name: Run Ansible playbook on EC2
         uses: appleboy/ssh-action@v0.1.0
         with:
