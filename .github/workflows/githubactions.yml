@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: /3-Multi-Container-Application
+        working-directory: devops/3-Multi-Container-Application
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -35,13 +35,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: ".env"
           target: "~/"
-      - name: Deploy docker container with ansible
-        uses: appleboy/ssh-action@v0.1.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd ./infrastructure/
-            ansible-playbook -i inventory/hosts provision.yml
-        
+      -  name: Deploy docker container with ansible
+         uses: appleboy/ssh-action@v0.1.0
+         with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USERNAME }}
+            key: ${{ secrets.EC2_SSH_KEY }}
+            script: |
+              ansible-playbook /usr/local/devops/3-multi-container-application/infrastructure/provision.yml -i /usr/local/devops/3-multi-container-application/infrastructure/inventory/hosts
