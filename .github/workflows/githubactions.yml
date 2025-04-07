@@ -83,11 +83,10 @@ jobs:
             chmod 644 ~/.ssh/known_hosts
         
       - name: Run Ansible playbook on EC2
-        uses: appleboy/ssh-action@v0.1.0
-        with:
+        env:
             host: ${{ secrets.EC2_HOST }}
             username: ${{ secrets.EC2_USERNAME }}
-            key: ${{ secrets.EC2_SSH_KEY }}
-            script: |
+            ANSIBLE_HOST_KEY_CHECKING: False
+        run: |
               ansible-playbook ~/3-Multi-Container-Application/infrastructure/provision.yml -i ~/3-Multi-Container-Application/infrastructure/inventory.ini
         
