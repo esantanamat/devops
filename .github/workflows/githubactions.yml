@@ -42,12 +42,21 @@ jobs:
             key: ${{ secrets.EC2_SSH_KEY }}
             source: "./3-Multi-Container-Application/app/.env"
             target: "~/"
-
-      -  name: Deploy docker container with ansible
-         uses: appleboy/ssh-action@v0.1.0
-         with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ${{ secrets.EC2_USERNAME }}
-            key: ${{ secrets.EC2_SSH_KEY }}
-            script: |
-              ansible-playbook /usr/local/devops/3-Multi-Container-Application/infrastructure/provision.yml -i /usr/local/devops/3-Multi-Container-Application/infrastructure/inventory/hosts
+      - name: Copy provision.yml to EC2
+        uses: appleboy/ssh-action@v0.1.0
+        with:
+              host: ${{ secrets.EC2_HOST }}
+              username: ${{ secrets.EC2_USERNAME }}
+              key: ${{ secrets.EC2_SSH_KEY }}
+              script: |
+                mkdir -p /usr/local/devops/3-Multi-Container-Application/infrastructure
+                scp -i ~/.ssh/my-aws-key ~/devops/3-Multi-Container-Application/infrastructure/provision.yml ec2-user@${{ secrets.EC2_HOST }}:/usr/local/devops/3-Multi-Container-Application/infrastructure/provision.yml
+    
+      - name: Deploy docker container with ansible
+        uses: appleboy/ssh-action@v0.1.0
+        with:
+              host: ${{ secrets.EC2_HOST }}
+              username: ${{ secrets.EC2_USERNAME }}
+              key: ${{ secrets.EC2_SSH_KEY }}
+              script: |
+                ansible-playbook /usr/local/devops/3-Multi-Container-Application/infrastructure/provision.yml -i /usr/local/devops/3-Multi-Container-Application/infrastructure/inventory/hosts
