@@ -45,7 +45,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "./3-Multi-Container-Application/app/.env"
+          source: "./app/.env"
           target: "~/3-Multi-Container-Application/app/.env"
 
       - name: Copy Ansible playbook to EC2
@@ -54,7 +54,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "./3-Multi-Container-Application/infrastructure/provision.yml"
+          source: "./infrastructure/provision.yml"
           target: "~/3-Multi-Container-Application/infrastructure/provision.yml"
 
       - name: Run Ansible playbook on EC2
