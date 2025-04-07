@@ -55,7 +55,7 @@ jobs:
             username: ${{ secrets.EC2_USERNAME }}
             key: ${{ secrets.EC2_SSH_KEY }}
             source: "./3-Multi-Container-Application/infrastructure/provision.yml"
-            target: "/home/ubuntu/3-Multi-Container-Application/infrastructure"
+            target: "/home/ubuntu/3-Multi-Container-Application/infrastructure/"
 
       - name: Deploy docker container with ansible
         uses: appleboy/ssh-action@v0.1.0
