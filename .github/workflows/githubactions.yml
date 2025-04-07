@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build: 
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -16,19 +16,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker Image
         run: docker build -t esantanamat/flask-app:latest .
 
-      - name: Log in to docker Hub
+      - name: Log in to Docker Hub
         uses: docker/login-action@v2
-        with: 
+        with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Push docker image
+      - name: Push Docker Image
         run: docker push esantanamat/flask-app:latest
 
       - name: Generate .env file from secrets
@@ -42,28 +42,26 @@ jobs:
       - name: Copy .env file to EC2
         uses: appleboy/scp-action@v0.1.0
         with:
-              host: ${{ secrets.EC2_HOST }}
-              username: ${{ secrets.EC2_USERNAME }}
-              key: ${{ secrets.EC2_SSH_KEY }}
-              source: "./3-Multi-Container-Application/app/.env"
-              target: "~/3-Multi-Container-Application/app/.env"
-        
-      - name: Copy provision.yml to EC2
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./3-Multi-Container-Application/app/.env"
+          target: "~/3-Multi-Container-Application/app/.env"
+
+      - name: Copy Ansible playbook to EC2
         uses: appleboy/scp-action@v0.1.0
         with:
-              host: ${{ secrets.EC2_HOST }}
-              username: ${{ secrets.EC2_USERNAME }}
-              key: ${{ secrets.EC2_SSH_KEY }}
-              source: "./3-Multi-Container-Application/infrastructure/provision.yml"
-              target: "~/3-Multi-Container-Application/infrastructure/provision.yml"
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./3-Multi-Container-Application/infrastructure/provision.yml"
+          target: "~/3-Multi-Container-Application/infrastructure/provision.yml"
 
-      - name: Deploy docker container with ansible
+      - name: Run Ansible playbook on EC2
         uses: appleboy/ssh-action@v0.1.0
         with:
-                host: ${{ secrets.EC2_HOST }}
-                username: ${{ secrets.EC2_USERNAME }}
-                key: ${{ secrets.EC2_SSH_KEY }}
-                script: |
-                  ansible-playbook /home/ubuntu/3-Multi-Container-Application/infrastructure/provision.yml -i /home/ubuntu/3-Multi-Container-Application/infrastructure/inventory/hosts
-
-          
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            ansible-playbook ~/3-Multi-Container-Application/infrastructure/provision.yml -i ~/3-Multi-Container-Application/infrastructure/inventory/hosts
