@@ -57,7 +57,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "./3-Multi-Container-Application/infrastructure/provision.yml"
           target: "~/3-Multi-Container-Application/infrastructure/"
-          strip_components: 1
+          strip_components: 2
 
       - name: Run Ansible playbook on EC2
         uses: appleboy/ssh-action@v0.1.0
