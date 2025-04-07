@@ -76,6 +76,12 @@ jobs:
           target: "~/3-Multi-Container-Application/infrastructure/"
           strip_components: 3
 
+      - name: Add EC2 host to known_hosts
+        run: |
+            mkdir -p ~/.ssh
+            ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+            chmod 644 ~/.ssh/known_hosts
+        
       - name: Run Ansible playbook on EC2
         uses: appleboy/ssh-action@v0.1.0
         with:
@@ -83,5 +89,5 @@ jobs:
             username: ${{ secrets.EC2_USERNAME }}
             key: ${{ secrets.EC2_SSH_KEY }}
             script: |
-              export ANSIBLE_HOST_KEY_CHECKING=False
               ansible-playbook ~/3-Multi-Container-Application/infrastructure/provision.yml -i ~/3-Multi-Container-Application/infrastructure/inventory.ini
+        
