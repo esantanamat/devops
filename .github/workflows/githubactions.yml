@@ -58,10 +58,13 @@ jobs:
           source: "./3-Multi-Container-Application/infrastructure/provision.yml"
           target: "~/3-Multi-Container-Application/infrastructure/"
           strip_components: 3
+
+
       - name: Replace placeholder with actual IP in inventory.ini
         run: |
-            sed -i "s|\${{ secrets.EC2_HOST }}|${{ secrets.EC2_HOST }}|g" ./3-Multi-Container-Application/infrastructure/inventory.ini
-            
+            sed -i 's|\${{ secrets.EC2_HOST }}|'"${{ secrets.EC2_HOST }}"'|g' ./3-Multi-Container-Application/infrastructure/inventory.ini
+        
+
       - name: Copy the inventory file
         uses: appleboy/scp-action@v0.1.0
         with:
