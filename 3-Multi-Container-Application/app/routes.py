@@ -5,7 +5,7 @@ from app.models import Todo
 routes = Blueprint("routes", __name__)
 
 
-@app.route('/')
+@routes.route('/')
 def hello_world():
     return 'Hello, World!'
 @routes.route('/todos', methods=['GET', 'POST'])
