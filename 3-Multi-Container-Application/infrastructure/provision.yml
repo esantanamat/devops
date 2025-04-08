@@ -49,3 +49,13 @@
         env_file: /home/ubuntu/3-Multi-Container-Application/app/.env
         published_ports:
           - "5000:5000"
+    - name: Launch postgresql container
+      docker_container:
+        name: postgres_db
+        image: postgres:13
+        state: started
+        restart_policy: always
+        env_file: /home/ubuntu/3-Multi-Container-Application/app/.env
+        published_ports:
+          - "5432:5432"
+
