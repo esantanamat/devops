@@ -34,7 +34,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "./3-Multi-Container-Application/app/.env"
-          target: "~/3-Multi-Container-Application/app/"
+          target: "~/3-Multi-Container-Application/"
           strip_components: 3
 
       
@@ -58,6 +58,15 @@ jobs:
           source: "./3-Multi-Container-Application/docker-compose.yml"
           target: "~/3-Multi-Container-Application/"
           strip_components: 2
+      - name: Copy Dockerfile to EC2
+        uses: appleboy/scp-action@v0.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./3-Multi-Container-Application/Dockerfile"
+          target: "~/3-Multi-Container-Application"
+          strip_components: 2
 
       
       - name: Copy inventory.ini to EC2
@@ -69,6 +78,15 @@ jobs:
           source: "./3-Multi-Container-Application/infrastructure/inventory.ini"
           target: "~/3-Multi-Container-Application/infrastructure/"
           strip_components: 3
+      - name: Copy init to EC2
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./3-Multi-Container-Application/init.sql"
+          target: "~/3-Multi-Container-Application"
+          strip_components: 2
 
       
       - name: Add EC2 host to known_hosts
