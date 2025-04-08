@@ -14,7 +14,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ./app/.env
+      - ./.env
 
     networks:
       - todo_network
@@ -35,7 +35,7 @@ services:
     networks:
       - todo_network
     env_file:
-      - ./app/.env
+      - ./.env
 
 networks:
   todo_network:
