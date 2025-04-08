@@ -4,6 +4,10 @@ from app.functions import fetch_all_todos, fetch_single_todo
 from app.models import Todo
 routes = Blueprint("routes", __name__)
 
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
 @routes.route('/todos', methods=['GET', 'POST'])
 def get_todos(): 
     
