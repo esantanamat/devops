@@ -134,4 +134,9 @@ jobs:
       
       - name: SSH and Start Containers with Docker Compose
         run: |
-          ssh -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd ~/3-Multi-Container-Application && docker-compose down && docker-compose up -d"
+          ssh -i private_key.pem ***@*** "
+          docker rm -f flask_app || true && \
+          docker rm -f postgres_db || true && \
+          cd ~/3-Multi-Container-Application && \
+          docker-compose pull && \
+          docker-compose up -d
