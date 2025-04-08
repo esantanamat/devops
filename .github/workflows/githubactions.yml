@@ -89,13 +89,23 @@ jobs:
           ssh -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sed -i 's|ipaddress|${{ secrets.EC2_HOST }}|g' ~/3-Multi-Container-Application/infrastructure/inventory.ini"
 
       
-      - name: Run Ansible Playbook on EC2 to install Docker and Docker Compose
+      - name: Run Ansible Playbook on EC2
         working-directory: ./3-Multi-Container-Application/infrastructure
         env:
-              ANSIBLE_USER: ${{ secrets.EC2_USERNAME }}  
-              ANSIBLE_HOST_KEY_CHECKING: False
+                ANSIBLE_USER: ${{ secrets.EC2_USERNAME }}  
+                ANSIBLE_HOST_KEY_CHECKING: False
         run: |
-              ansible-playbook -i inventory.ini provision.yml --private-key private_key.pem -u ${{ secrets.EC2_USERNAME }}
+                
+                echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+                chmod 600 private_key.pem 
+            
+               
+                sed -i 's|ipaddress|'"${{ secrets.EC2_HOST }}"'|g' inventory.ini
+            
+               
+                ansible-playbook -i inventory.ini provision.yml --private-key private_key.pem -u ${{ secrets.EC2_USERNAME }}
+            
+  
 
       
       - name: SSH and Start Containers with Docker Compose
