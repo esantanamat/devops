@@ -57,7 +57,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "./3-Multi-Container-Application/docker-compose.yml"
           target: "~/3-Multi-Container-Application/"
-          strip_components: 3
+          strip_components: 2
 
       
       - name: Copy inventory.ini to EC2
