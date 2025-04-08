@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-    
+      
       - name: Generate .env file from secrets
         run: |
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> app/.env
@@ -48,7 +48,7 @@ jobs:
           target: "~/3-Multi-Container-Application/infrastructure/"
           strip_components: 3
 
-    
+     
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@v0.1.0
         with:
@@ -77,9 +77,18 @@ jobs:
             ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
             chmod 644 ~/.ssh/known_hosts
 
+      
+      - name: Prepare private key for SSH
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
+      
       - name: Replace placeholder with actual IP in inventory.ini
         run: |
-           ssh -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sed -i 's|ipaddress|${{ secrets.EC2_HOST }}|g' ~/3-Multi-Container-Application/infrastructure/inventory.ini"
+          ssh -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sed -i 's|ipaddress|${{ secrets.EC2_HOST }}|g' ~/3-Multi-Container-Application/infrastructure/inventory.ini"
+
+      
       - name: Run Ansible Playbook on EC2 to install Docker and Docker Compose
         working-directory: ./3-Multi-Container-Application/infrastructure
         env:
@@ -88,9 +97,7 @@ jobs:
         run: |
               ansible-playbook -i inventory.ini provision.yml --private-key private_key.pem -u ${{ secrets.EC2_USERNAME }}
 
-    
+      
       - name: SSH and Start Containers with Docker Compose
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
-          chmod 600 private_key.pem  
           ssh -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd ~/3-Multi-Container-Application && docker-compose up -d"
