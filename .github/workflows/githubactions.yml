@@ -82,11 +82,19 @@ jobs:
             ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
             chmod 644 ~/.ssh/known_hosts
         
-      - name: Run Ansible playbook on EC2
+      - name: Run Ansible Playbook on EC2
+        working-directory: ./3-Multi-Container-Application/infrastructure
         env:
-            host: ${{ secrets.EC2_HOST }}
-            username: ${{ secrets.EC2_USERNAME }}
-            ANSIBLE_HOST_KEY_CHECKING: False
+              ANSIBLE_USER: ${{ secrets.EC2_USERNAME }}  
+              ANSIBLE_HOST_KEY_CHECKING: False
         run: |
-              ansible-playbook ~/3-Multi-Container-Application/infrastructure/provision.yml -i ~/3-Multi-Container-Application/infrastructure/inventory.ini
-        
+              
+              echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+              chmod 600 private_key.pem  # Ensure the key is private
+          
+             
+              sed -i 's|ipaddress|'"${{ secrets.EC2_HOST }}"'|g' inventory.ini
+          
+             
+              ansible-playbook -i inventory.ini provision.yml --private-key private_key.pem -u ${{ secrets.EC2_USERNAME }}
+          
