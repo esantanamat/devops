@@ -77,9 +77,9 @@ jobs:
             ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
             chmod 644 ~/.ssh/known_hosts
 
-            - name: Replace placeholder with actual IP in inventory.ini
-            run: |
-                ssh -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sed -i 's|ipaddress|${{ secrets.EC2_HOST }}|g' ~/3-Multi-Container-Application/infrastructure/inventory.ini"
+      - name: Replace placeholder with actual IP in inventory.ini
+        run: |
+           ssh -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sed -i 's|ipaddress|${{ secrets.EC2_HOST }}|g' ~/3-Multi-Container-Application/infrastructure/inventory.ini"
       - name: Run Ansible Playbook on EC2 to install Docker and Docker Compose
         working-directory: ./3-Multi-Container-Application/infrastructure
         env:
