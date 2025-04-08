@@ -17,6 +17,11 @@
         url: https://github.com/docker/compose/releases/download/v2.24.1/docker-compose-linux-x86_64
         dest: /usr/local/bin/docker-compose
         mode: '0755'
+    - name: Ensure Docker is started
+      service:
+       name: docker
+       state: started
+
     # - name: Clone github repo
     #   git:
     #     repo: https://github.com/esantanamat/devops.git
@@ -31,16 +36,16 @@
     #   file:
     #     path: "/usr/local/devops/2-EC2-Instance"
     #     state: absent
-    # - name: Remove existing container
-    #   docker_container:
-    #     name: flask_app
-    #     state: absent
+    - name: Remove existing container
+      docker_container:
+        name: flask_app
+        state: absent
     - name: Launch containers on EC2 instance
       docker_container:
         name: flask_app
         image: esantanamat/flask-app:latest
         state: started
         restart_policy: always
-        env_file: /home/{{ ansible_user }}/.env
+        env_file: /home/ubuntu/3-Multi-Container-Application/app/.env
         published_ports:
           - "5000:5000"
