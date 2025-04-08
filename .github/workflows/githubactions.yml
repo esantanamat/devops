@@ -19,8 +19,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build Docker Image
-        run: docker build -t esantanamat/flask-app:latest .
+      
+      - name: Build Docker Images using docker-compose
+        run: |
+          docker-compose build
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -28,9 +30,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Push Docker Image
-        run: docker push esantanamat/flask-app:latest
+      - name: Push Docker Images
+        run: |
+          docker-compose push
 
+      
       - name: Generate .env file from secrets
         run: |
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> app/.env
@@ -39,6 +43,7 @@ jobs:
           echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> app/.env
           echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> app/.env
 
+      
       - name: Copy .env file to EC2
         uses: appleboy/scp-action@v0.1.0
         with:
@@ -49,6 +54,7 @@ jobs:
           target: "~/3-Multi-Container-Application/app/"
           strip_components: 3
 
+      
       - name: Copy Ansible playbook to EC2
         uses: appleboy/scp-action@v0.1.0
         with:
@@ -59,13 +65,12 @@ jobs:
           target: "~/3-Multi-Container-Application/infrastructure/"
           strip_components: 3
 
-
+      
       - name: Replace placeholder with actual IP in inventory.ini
         run: |
             sed -i 's|ipaddress|'"${{ secrets.EC2_HOST }}"'|g' infrastructure/inventory.ini
-        
-        
 
+     
       - name: Copy the inventory file
         uses: appleboy/scp-action@v0.1.0
         with:
@@ -76,25 +81,25 @@ jobs:
           target: "~/3-Multi-Container-Application/infrastructure/"
           strip_components: 3
 
+      
       - name: Add EC2 host to known_hosts
         run: |
             mkdir -p ~/.ssh
             ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
             chmod 644 ~/.ssh/known_hosts
+
+      
+      - name: SSH and Start Containers with Docker Compose
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+          chmod 600 private_key.pem  # Ensure the key is private
+          ssh -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd ~/3-Multi-Container-Application && docker-compose up -d"
         
+     
       - name: Run Ansible Playbook on EC2
         working-directory: ./3-Multi-Container-Application/infrastructure
         env:
               ANSIBLE_USER: ${{ secrets.EC2_USERNAME }}  
               ANSIBLE_HOST_KEY_CHECKING: False
         run: |
-              
-              echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
-              chmod 600 private_key.pem  # Ensure the key is private
-          
-             
-              sed -i 's|ipaddress|'"${{ secrets.EC2_HOST }}"'|g' inventory.ini
-          
-             
               ansible-playbook -i inventory.ini provision.yml --private-key private_key.pem -u ${{ secrets.EC2_USERNAME }}
-          
