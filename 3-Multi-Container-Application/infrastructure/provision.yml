@@ -17,24 +17,24 @@
         url: https://github.com/docker/compose/releases/download/v2.24.1/docker-compose-linux-x86_64
         dest: /usr/local/bin/docker-compose
         mode: '0755'
-    - name: Clone github repo
-      git:
-        repo: https://github.com/esantanamat/devops.git
-        dest: /usr/local/devops
-        clone: yes
-        update: yes
-    - name: Remove unrelated directory
-      file:
-        path: "/usr/local/devops/1-Build-Docker-File"
-        state: absent
-    - name: Remove another unrelated directory
-      file:
-        path: "/usr/local/devops/2-EC2-Instance"
-        state: absent
-    - name: Remove existing container
-      docker_container:
-        name: flask_app
-        state: absent
+    # - name: Clone github repo
+    #   git:
+    #     repo: https://github.com/esantanamat/devops.git
+    #     dest: /usr/local/devops
+    #     clone: yes
+    #     update: yes
+    # - name: Remove unrelated directory
+    #   file:
+    #     path: "/usr/local/devops/1-Build-Docker-File"
+    #     state: absent
+    # - name: Remove another unrelated directory
+    #   file:
+    #     path: "/usr/local/devops/2-EC2-Instance"
+    #     state: absent
+    # - name: Remove existing container
+    #   docker_container:
+    #     name: flask_app
+    #     state: absent
     - name: Launch containers on EC2 instance
       docker_container:
         name: flask_app
