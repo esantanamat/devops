@@ -3,6 +3,10 @@
   hosts: webservers
   become: yes
   tasks:
+    - name: Make sure python3 is installed
+      package:
+      name: python3
+      state: present
     - name: Install docker
       apt:
        name: docker.io
