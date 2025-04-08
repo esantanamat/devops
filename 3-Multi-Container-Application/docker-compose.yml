@@ -35,6 +35,7 @@ services:
 
 networks:
   todo_network:
+    name: todonetwork
     driver: bridge
 
 volumes:
