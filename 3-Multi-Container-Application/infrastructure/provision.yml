@@ -36,10 +36,10 @@
     #   file:
     #     path: "/usr/local/devops/2-EC2-Instance"
     #     state: absent
-    - name: Remove existing container
-      docker_container:
-        name: flask_app
-        state: absent
+    # - name: Remove existing container
+    #   docker_container:
+    #     name: flask_app
+    #     state: absent
     - name: Launch containers on EC2 instance
       docker_container:
         name: flask_app
