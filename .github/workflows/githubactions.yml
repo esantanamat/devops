@@ -124,7 +124,13 @@ jobs:
                 ansible-playbook -i inventory.ini provision.yml --private-key private_key.pem -u ${{ secrets.EC2_USERNAME }}
             
   
-
+                - name: Log in to DockerHub
+                run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+              
+      - name: Build and push image
+        run: |
+            docker build -t esantanamat/flask-app:latest .
+             docker push esantanamat/flask-app:latest
       
       - name: SSH and Start Containers with Docker Compose
         run: |

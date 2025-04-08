@@ -3,6 +3,11 @@
   hosts: webservers
   become: yes
   tasks:
+    - name: Install pip3
+      apt:
+        name: python3-pip
+        state: present
+
     - name: Make sure python3 is installed
       package:
         name: python3
@@ -40,22 +45,22 @@
     #   docker_container:
     #     name: flask_app
     #     state: absent
-    - name: Launch containers on EC2 instance
-      docker_container:
-        name: flask_app
-        image: esantanamat/flask-app:latest
-        state: started
-        restart_policy: always
-        env_file: /home/ubuntu/3-Multi-Container-Application/app/.env
-        published_ports:
-          - "5000:5000"
-    - name: Launch postgresql container
-      docker_container:
-        name: postgres_db
-        image: postgres:13
-        state: started
-        restart_policy: always
-        env_file: /home/ubuntu/3-Multi-Container-Application/app/.env
-        published_ports:
-          - "5432:5432"
+    # - name: Launch containers on EC2 instance
+    #   docker_container:
+    #     name: flask_app
+    #     image: esantanamat/flask-app:latest
+    #     state: started
+    #     restart_policy: always
+    #     env_file: /home/ubuntu/3-Multi-Container-Application/app/.env
+    #     published_ports:
+    #       - "5000:5000"
+    # - name: Launch postgresql container
+    #   docker_container:
+    #     name: postgres_db
+    #     image: postgres:13
+    #     state: started
+    #     restart_policy: always
+    #     env_file: /home/ubuntu/3-Multi-Container-Application/app/.env
+    #     published_ports:
+    #       - "5432:5432"
 
